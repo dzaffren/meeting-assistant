@@ -144,6 +144,44 @@ iPhone via Expo Go.
 - Android testing by hand: CI covers the emulator; a real Android phone is
   later.
 
+## Interface
+
+Nine screens, composed from `docs/design/design-system/` only. No new
+component, no new token.
+
+```mermaid
+flowchart LR
+    S1[1 Idle] --> S2[2 Name prompt]
+    S2 --> S4[4 Recording]
+    S2 -. mic refused .-> S3[3 Microphone refused]
+    S4 --> S5[5 Stop sheet]
+    S5 --> S6[6 Discard confirm]
+    S5 --> S7[7 Saved]
+    S7 --> S8[8 Meeting list]
+    S8 --> S2
+```
+
+| Screen | States shown | Components |
+|---|---|---|
+| 1 Idle | default | control-record big, label |
+| 2 Name prompt | empty and focused, typed and button pressed | heading, input, btn-primary, btn-secondary |
+| 3 Microphone refused | default | heading, meta, btn-primary, btn-secondary |
+| 4 Recording | recording | meta title, aurora, aurora-highlight, aurora-fade, control-stop, label |
+| 5 Stop sheet | open over the paused aurora | scrim, sheet, btn-primary, btn-secondary, btn-destructive |
+| 6 Discard confirm | open | scrim, sheet, btn-destructive, btn-secondary |
+| 7 Saved | default | check in a raised circle, heading, meta |
+| 8 Meeting list | three rows, and empty on first open | title, card row, meta, empty card, control-record big |
+
+**Motion tier:** 1. Press feedback 160 ms. The aurora breathes while recording
+and holds still under the stop sheet. Reduced motion freezes it.
+
+**Components used:** control-record, control-stop, btn-primary, btn-secondary,
+btn-destructive, input, input-error, sheet, scrim, card, row, aurora,
+aurora-highlight, aurora-fade, and the title, heading, meta and label text styles.
+
+**Preview:** `docs/design/walking-skeleton/preview.html`, open it in a browser.
+Editable boards for the primitives: https://claude.ai/artifact/Gn8YU2C8f3Pyn73pjMCKiZ
+
 ## Open items
 
 | ID | What | Type | Raised at | Owner | Status | Answer |
