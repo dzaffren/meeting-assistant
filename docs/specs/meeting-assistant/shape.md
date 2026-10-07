@@ -47,7 +47,7 @@ Slice 3 and 4 both need slice 2 and are independent of each other.
 
 | # | Slice | What ships | Why this order |
 |---|-------|-----------|----------------|
-| 0 | Walking skeleton | App on the real phone. Tap record, tap stop, an audio file is saved and shows in a list. One e2e test, CI on push. | Empty repo. Proves the phone, the build, the mic permission and the deploy path before anything clever. |
+| 0 | Walking skeleton | App on the real phone. Tap record, name the meeting, confirm, record (glow and stop only on screen), tap stop, confirm, saved. The file shows in a list. One e2e test, CI on push. | Empty repo. Proves the phone, the build, the mic permission and the deploy path before anything clever. |
 | 1 | Read the transcript | After stop, the recording becomes text Dzafran can read on the phone. | First real value: "what was said" is never lost again, even before any AI summary. Also settles the transcription choice everything else sits on. |
 | 2 | Summary, decisions, to-dos | Transcript becomes three short sections: summary, decisions made, things Dzafran has to do. | This is the thing asked for. Reading a 60 min transcript is not much better than not having one. |
 | 3 | Find an old meeting | Past meetings listed by date and title, open any one and see its notes. | The pain is "a week later I need it". Slice 2 only shows the latest meeting. |
@@ -70,9 +70,10 @@ Decide at `/spec`.
 
 | ID | What | Type | Raised at | Owner | Status | Answer |
 | -- | ---- | ---- | --------- | ----- | ------ | ------ |
-| O1 | Which phone: Android or iPhone? Decides the whole stack and how slice 4 behaves. | question | shape | user | Open | — |
+| O1 | Which phone: Android or iPhone? Decides the whole stack and how slice 4 behaves. | question | shape | user | Resolved | Both. One cross-platform codebase, decided at /spec. |
 | O2 | What languages are spoken in the meetings? English only, or Malay and English mixed? Decides which transcription model works. | question | shape | user | Open | — |
 | O3 | Is Dzafran allowed to record these meetings (work policy, other people's consent)? Not a code question, but the app is useless if the answer is no. | flag | shape | user | Open | — |
 | O4 | Assuming transcription runs in the cloud, not on the phone. Cheaper to build; costs money per meeting and sends work audio off the device. | assumption | shape | user | Open | — |
 | O5 | Assuming a phone mic in a room, or next to a laptop speaker, gives audio clear enough to transcribe. Unproven. | unproven | shape | poc | Open | — |
 | O6 | Assuming Dzafran is fine with work meeting audio stored on a personal phone and a third-party transcription service. | assumption | shape | user | Open | — |
+| O8 | Dark only, no light mode. Craft floor asks for both. | flag | design-system | user | Accepted risk | Personal app, user prefers dark. 2026-10-07 |
