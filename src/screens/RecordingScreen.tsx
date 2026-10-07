@@ -95,18 +95,19 @@ function Aurora({ active }: { active: boolean }) {
 
   return (
     <View pointerEvents="none" style={StyleSheet.absoluteFill}>
-      <Animated.View style={{ position: 'absolute', left: -60, right: -60, bottom: 0, height: 480, opacity: between(slow, 0.75, 1), transform: [{ scaleY: between(slow, 1, 1.1) }], transformOrigin: 'bottom' }}>
+      <Animated.View style={[StyleSheet.absoluteFill, { opacity: between(slow, 0.8, 1) }]}>
         <LinearGradient
-          colors={['rgba(11,12,15,0)', 'rgba(99,120,255,0.12)', 'rgba(140,90,255,0.4)', 'rgba(111,163,255,0.8)', 'rgba(150,190,255,1)']}
-          locations={[0, 0.45, 0.68, 0.88, 1]}
-          style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 480 }}
+          colors={['rgba(60,70,160,0.35)', 'rgba(99,120,255,0.3)', 'rgba(140,90,255,0.5)', 'rgba(111,163,255,0.85)', 'rgba(150,190,255,1)']}
+          locations={[0, 0.3, 0.6, 0.85, 1]}
+          style={StyleSheet.absoluteFill}
         />
-        <Animated.View style={{ position: 'absolute', left: 30, bottom: -70, width: 280, height: 220, borderRadius: 140, backgroundColor: 'rgba(190,160,255,0.6)', transform: [{ translateX: between(mid, -50, 50) }, { translateY: between(fast, 0, -18) }] }} />
-        <Animated.View style={{ position: 'absolute', right: 10, bottom: -50, width: 240, height: 180, borderRadius: 120, backgroundColor: 'rgba(111,163,255,0.55)', transform: [{ translateX: between(slow, 40, -40) }, { translateY: between(mid, -12, 10) }] }} />
-        <Animated.View style={{ position: 'absolute', left: 150, bottom: 20, width: 200, height: 140, borderRadius: 100, backgroundColor: 'rgba(120,200,255,0.35)', transform: [{ translateX: between(fast, -70, 70) }, { translateY: between(slow, 10, -24) }] }} />
+        <Animated.View style={{ position: 'absolute', left: -40, top: 60, width: 300, height: 260, borderRadius: 150, backgroundColor: 'rgba(90,110,255,0.45)', transform: [{ translateX: between(mid, -30, 60) }, { translateY: between(slow, 0, 50) }] }} />
+        <Animated.View style={{ position: 'absolute', right: -60, top: 240, width: 320, height: 280, borderRadius: 160, backgroundColor: 'rgba(170,120,255,0.5)', transform: [{ translateX: between(slow, 40, -50) }, { translateY: between(fast, -20, 20) }] }} />
+        <Animated.View style={{ position: 'absolute', left: 20, bottom: 120, width: 300, height: 240, borderRadius: 150, backgroundColor: 'rgba(190,160,255,0.6)', transform: [{ translateX: between(fast, -60, 60) }, { translateY: between(mid, 10, -30) }] }} />
+        <Animated.View style={{ position: 'absolute', right: 0, bottom: -40, width: 260, height: 200, borderRadius: 130, backgroundColor: 'rgba(120,200,255,0.5)', transform: [{ translateX: between(mid, 50, -40) }, { translateY: between(slow, 0, -24) }] }} />
       </Animated.View>
-      <BlurView intensity={80} tint="dark" style={StyleSheet.absoluteFill} />
-      <LinearGradient colors={['rgba(11,12,15,0)', colors.surface]} locations={[0.25, 1]} style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 160 }} />
+      <BlurView intensity={90} tint="dark" style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={['rgba(11,12,15,0.55)', 'rgba(11,12,15,0)']} locations={[0, 1]} style={{ position: 'absolute', left: 0, right: 0, top: 0, height: 180 }} />
     </View>
   );
 }
