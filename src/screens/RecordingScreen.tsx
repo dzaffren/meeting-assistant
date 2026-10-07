@@ -10,6 +10,8 @@ type Live = Extract<State, { kind: 'recording' | 'stopSheet' | 'discardConfirm' 
 
 type Props = {
   state: Live;
+  busy: boolean;
+  error: string | null;
   onStop: () => void;
   onKeep: () => void;
   onSave: () => void;
@@ -18,7 +20,7 @@ type Props = {
   onConfirmDiscard: () => void;
 };
 
-export function RecordingScreen({ state, onStop, onKeep, onSave, onDiscard, onCancelDiscard, onConfirmDiscard }: Props) {
+export function RecordingScreen({ state, busy, error, onStop, onKeep, onSave, onDiscard, onCancelDiscard, onConfirmDiscard }: Props) {
   const breathing = state.kind === 'recording';
   return (
     <View style={styles.screen} testID="screen-recording">
@@ -35,11 +37,12 @@ export function RecordingScreen({ state, onStop, onKeep, onSave, onDiscard, onCa
           <View style={{ gap: 8 }}>
             <Text style={styles.heading}>Stop and save?</Text>
             <Text style={[styles.bodyText, { color: colors.textMuted }]}>{state.title}, {formatDuration(Date.now() - state.startedAt)}.</Text>
+            {error && <Text style={[styles.meta, { color: colors.recording }]} testID="error">{error}</Text>}
           </View>
           <View style={styles.stack}>
-            <Button label="Stop and save" onPress={onSave} testID="stop-and-save" />
-            <Button label="Keep recording" kind="secondary" onSurface onPress={onKeep} testID="keep-recording" />
-            <Button label="Discard" kind="destructive" onPress={onDiscard} testID="discard" />
+            <Button label={busy ? 'Saving' : 'Stop and save'} disabled={busy} onPress={onSave} testID="stop-and-save" />
+            <Button label="Keep recording" kind="secondary" onSurface disabled={busy} onPress={onKeep} testID="keep-recording" />
+            <Button label="Discard" kind="destructive" onSurface disabled={busy} onPress={onDiscard} testID="discard" />
           </View>
         </Sheet>
       )}
@@ -49,10 +52,11 @@ export function RecordingScreen({ state, onStop, onKeep, onSave, onDiscard, onCa
           <View style={{ gap: 8 }}>
             <Text style={styles.heading}>Discard {formatDuration(state.durationMs)} of audio?</Text>
             <Text style={[styles.bodyText, { color: colors.textMuted }]}>This can't be undone.</Text>
+            {error && <Text style={[styles.meta, { color: colors.recording }]} testID="error">{error}</Text>}
           </View>
           <View style={styles.stack}>
-            <Button label="Discard" kind="destructive" onSurface onPress={onConfirmDiscard} testID="confirm-discard" />
-            <Button label="Cancel" kind="secondary" onSurface onPress={onCancelDiscard} />
+            <Button label="Discard" kind="destructive" onSurface disabled={busy} onPress={onConfirmDiscard} testID="confirm-discard" />
+            <Button label="Cancel" kind="secondary" onSurface disabled={busy} onPress={onCancelDiscard} />
           </View>
         </Sheet>
       )}
