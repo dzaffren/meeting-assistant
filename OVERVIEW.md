@@ -1,6 +1,6 @@
 # Meeting Assistant
 
-**Status:** Active · **Updated:** 2026-10-07 by /build
+**Status:** Active · **Updated:** 2026-10-07 by /ship walking-skeleton
 
 A phone app that records a meeting quietly and, afterwards, gives a summary, the decisions made, and the things to do.
 Used by one person, Dzafran, in Teams, Zoom, Meet and in-room meetings.
@@ -28,7 +28,7 @@ Used by one person, Dzafran, in Teams, Zoom, Meet and in-room meetings.
 
 | Slice            | Status | What it does                                              | Page |
 | ---------------- | ------ | --------------------------------------------------------- | ---- |
-| walking-skeleton | Built  | tap record, name it, record, stop, save or discard, list it | none |
+| walking-skeleton | Built  | tap record, name the meeting, record, stop, save or discard, see it in the list | none, Markdown only |
 
 ## More
 
