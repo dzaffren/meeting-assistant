@@ -19,10 +19,11 @@ meeting room or on a call with the phone lying on the desk.
 
 ## Reference
 
-Gemini Live, the voice mode in the Gemini app. Taking its structure: black
-screen, a small muted title top centre, a wide soft blue-to-violet aurora band
-low on the screen that breathes slowly, round controls at the very bottom with
-tiny labels, pill-shaped buttons and inputs. Not taking: its logo, its gradient
+Gemini Live, the voice mode in the Gemini app. Taking its structure: a small
+muted title top centre, a soft blue-to-violet aurora that fills the whole
+screen while recording, brightest at the bottom, with lights drifting on their
+own clocks, round controls at the very bottom with tiny labels, pill-shaped
+buttons and inputs. Not taking: its logo, its gradient
 wordmark, its exact colours, or any asset. The structure is borrowed; the
 surface is ours.
 
@@ -105,13 +106,16 @@ Contrast checked at AA for every text colour on surface.
 
 ### Recording aurora (recording only)
 
+Decided on the phone, 2026-10-07, after three rounds in Expo Go.
+
 | Token | Value |
 |---|---|
-| aurora | ellipse 520×220 at bottom 120, radial from rgba(111,163,255,.95) → rgba(99,120,255,.75) at 30% → rgba(140,90,255,.45) at 55% → transparent at 75%, blur 26px |
-| aurora highlight | ellipse 260×90, rgba(190,160,255,.9) → transparent at 70%, blur 22px, drifts 30px side to side over 6s |
-| aurora motion | breathe: scaleY 1 → 1.25, scaleX 1 → 1.06, opacity .85 → 1, 4s ease-in-out |
-| fade | 120px bottom fade to surface so the controls sit on solid black |
-| reduced motion | both static |
+| aurora | full-screen vertical gradient rgba(60,70,160,.35) → rgba(99,120,255,.3) at 30% → rgba(140,90,255,.5) at 60% → rgba(111,163,255,.85) at 85% → rgba(150,190,255,1) |
+| lights | four soft ellipses, 200 to 320 px, blue, violet, lilac and cyan at .45 to .6, spread top to bottom |
+| motion | three clocks, 4.2 s, 2.9 s and 2.1 s, sine in and out; each light drifts sideways 60 to 120 px and bobs 20 to 50 px; the whole layer breathes .8 → 1 opacity |
+| blur | full-screen dark blur at intensity 90 over the lights, so nothing has an edge |
+| top shade | rgba(11,12,15,.55) → transparent over the top 180 px, so the title reads |
+| reduced motion | everything static |
 
 ### Spacing
 
