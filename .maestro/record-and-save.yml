@@ -21,10 +21,13 @@ appId: com.dzafran.meetingassistant
     id: screen-recording
 - assertVisible: "Raslaw weekly sync"
 - assertNotVisible: "Meetings"
+# Maestro has no sleep. Waiting for an id that never renders, with
+# optional: true, is the documented way to pause for a fixed time.
 - extendedWaitUntil:
     visible:
-      id: stop
+      id: five-seconds-of-meeting
     timeout: 5000
+    optional: true
 - tapOn:
     id: stop
 - assertVisible: "Stop and save?"
@@ -32,11 +35,11 @@ appId: com.dzafran.meetingassistant
     id: stop-and-save
 - assertVisible: "Saved"
 - assertVisible:
-    text: "Raslaw weekly sync · .* s"
+    text: "Raslaw weekly sync · [4-7] s"
 - extendedWaitUntil:
     visible:
       id: screen-list
     timeout: 4000
 - assertVisible: "Raslaw weekly sync"
 - assertVisible:
-    text: "Today · .* s"
+    text: "Today · [4-7] s"
