@@ -354,44 +354,7 @@ B depends on A. C depends on B. Shared config and the lockfile belong to A.
 
 ### Decisions to record
 
-## D2 · 2026-10-07 · Expo (React Native) with TypeScript
-
-Why: one codebase for Android and iPhone, runs on a real iPhone through Expo Go
-without a Mac, and expo-audio is the best-documented recording path. Dzafran
-delegated the choice.
-Rejected: Flutter (smaller audio ecosystem, a new language for no gain); Kotlin
-Multiplatform (iOS side immature); two native apps (double the work for one user).
-Source: docs/specs/walking-skeleton.md
-Status: active
-
-## D3 · 2026-10-07 · Everything on the phone: SQLite rows, audio files in the sandbox, no server
-
-Why: slice 0 has one user and no sharing. A server adds hosting, auth and a
-network failure mode to a skeleton whose job is to prove recording works.
-Rejected: a hosted database (nothing to sync yet); a JSON file for the list
-(no transactions, hand-rolled locking); storing audio in the database (files of
-up to 60 MB belong on disk).
-Source: docs/specs/walking-skeleton.md
-Status: active
-
-## D4 · 2026-10-07 · GitHub Actions for typecheck and unit tests, EAS Workflows for the Maestro e2e
-
-Why: unit tests need no emulator and run free on GitHub. The e2e needs an Android
-emulator, which Expo's documented EAS Workflows provide in the cloud.
-Rejected: Android emulator on GitHub's free runners (nested virtualisation is
-unreliable there and an APK build adds 10+ min per run); iOS simulator on CI
-(paid macOS minutes).
-Source: docs/specs/walking-skeleton.md
-Status: active
-
-## D5 · 2026-10-07 · Maestro for the e2e, pnpm for packages
-
-Why: Maestro drives the built app from YAML and is what EAS Workflows run; pnpm
-is fast and refuses to install against a stale lockfile.
-Rejected: Detox (needs a native build toolchain on the runner and gray-box
-hooks in the app); npm (slower, looser lockfile).
-Source: docs/specs/walking-skeleton.md
-Status: active
+Recorded as D2, D3, D4, D5.
 
 ## Open items
 
