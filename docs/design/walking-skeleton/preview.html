@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Walking skeleton screens</title>
+<link rel="stylesheet" href="../design-system/styles.css">
+<style>
+  body { padding: var(--space-8) var(--gutter); }
+  h1 { font: var(--text-title); margin: 0 0 var(--space-2); }
+  .intro { font: var(--text-meta); color: var(--color-text-muted); max-width: 60ch; margin: 0 0 var(--space-8); }
+  .screens { display: flex; flex-wrap: wrap; gap: var(--space-8); align-items: flex-start; }
+  .screen { display: flex; flex-direction: column; gap: var(--space-3); }
+  .screen > .label { font: var(--text-meta); color: var(--color-text-muted); }
+  .phone { position: relative; width: 390px; height: 844px; box-sizing: border-box; overflow: hidden; border-radius: var(--radius-sheet); background: var(--color-surface); border: 1px solid var(--color-border); display: flex; flex-direction: column; }
+  .top { padding: 64px var(--gutter) 0; text-align: center; }
+  .bottom { position: absolute; left: 0; right: 0; bottom: 36px; display: flex; flex-direction: column; align-items: center; gap: var(--space-2); }
+  .body { padding: 64px var(--gutter) 0; display: flex; flex-direction: column; gap: var(--space-6); }
+  .stack { display: flex; flex-direction: column; gap: var(--space-3); }
+  .rows { display: flex; flex-direction: column; gap: var(--space-2); }
+  .center { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-4); text-align: center; padding: 0 var(--gutter); }
+  .check { width: var(--control); height: var(--control); border-radius: var(--radius-pill); background: var(--color-surface-raised); display: flex; align-items: center; justify-content: center; }
+  .phone .scrim, .phone .sheet { position: absolute; }
+  .phone .scrim { inset: 0; }
+  .input.focus { outline: none; border: 2px solid var(--color-accent); }
+  .btn.pressed { transform: scale(.97); opacity: .9; }
+</style>
+</head>
+<body>
+<h1>Walking skeleton</h1>
+<p class="intro">Every screen slice 0 ships, composed from the design system. Tap record, name it, record, stop, save or discard, see it in the list. Motion plays here: the aurora breathes while recording.</p>
+
+<div class="screens">
+
+<div class="screen"><div class="label">1 · Idle</div>
+<div class="phone">
+  <div class="top"><span class="meta">Meeting Assistant</span></div>
+  <div class="bottom"><button class="control control-record big" aria-label="Record"></button><span class="label">Record</span></div>
+</div></div>
+
+<div class="screen"><div class="label">2 · Name prompt, empty</div>
+<div class="phone">
+  <div class="body">
+    <p class="heading">What is this meeting?</p>
+    <div class="stack">
+      <label class="meta" for="name-empty">Meeting name</label>
+      <input class="input focus" id="name-empty" placeholder="Leave blank to name it by time">
+    </div>
+    <div class="stack">
+      <button class="btn btn-primary">Start recording</button>
+      <button class="btn btn-secondary">Cancel</button>
+    </div>
+  </div>
+</div></div>
+
+<div class="screen"><div class="label">2b · Name prompt, typed</div>
+<div class="phone">
+  <div class="body">
+    <p class="heading">What is this meeting?</p>
+    <div class="stack">
+      <label class="meta" for="name-typed">Meeting name</label>
+      <input class="input focus" id="name-typed" value="Raslaw weekly sync">
+    </div>
+    <div class="stack">
+      <button class="btn btn-primary pressed">Start recording</button>
+      <button class="btn btn-secondary">Cancel</button>
+    </div>
+  </div>
+</div></div>
+
+<div class="screen"><div class="label">3 · Microphone refused</div>
+<div class="phone">
+  <div class="center">
+    <p class="heading">Meeting Assistant needs the microphone to record.</p>
+    <p class="meta">Allow it in Settings, then come back and tap record.</p>
+    <button class="btn btn-primary" style="width: 100%">Open Settings</button>
+    <button class="btn btn-secondary" style="width: 100%">Not now</button>
+  </div>
+</div></div>
+
+<div class="screen"><div class="label">4 · Recording</div>
+<div class="phone">
+  <div class="top"><span class="meta">Raslaw weekly sync</span></div>
+  <div class="aurora"></div><div class="aurora-highlight"></div><div class="aurora-fade"></div>
+  <div class="bottom"><button class="control control-stop" aria-label="Stop recording"></button><span class="label">Stop</span></div>
+</div></div>
+
+<div class="screen"><div class="label">5 · Stop sheet</div>
+<div class="phone">
+  <div class="top"><span class="meta">Raslaw weekly sync</span></div>
+  <div class="aurora" style="animation: none"></div><div class="aurora-highlight" style="animation: none"></div><div class="aurora-fade"></div>
+  <div class="scrim"></div>
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="stack" style="gap: var(--space-2)">
+      <p class="heading">Stop and save?</p>
+      <p class="meta" style="font: var(--text-body); color: var(--color-text-muted)">Raslaw weekly sync, 48 min.</p>
+    </div>
+    <div class="stack">
+      <button class="btn btn-primary">Stop and save</button>
+      <button class="btn btn-secondary" style="background: var(--color-surface)">Keep recording</button>
+      <button class="btn btn-destructive">Discard</button>
+    </div>
+  </div>
+</div></div>
+
+<div class="screen"><div class="label">6 · Discard confirm</div>
+<div class="phone">
+  <div class="top"><span class="meta">Portfolio feedback with Sam</span></div>
+  <div class="aurora" style="animation: none"></div><div class="aurora-highlight" style="animation: none"></div><div class="aurora-fade"></div>
+  <div class="scrim"></div>
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="stack" style="gap: var(--space-2)">
+      <p class="heading">Discard 8 s of audio?</p>
+      <p class="meta" style="font: var(--text-body); color: var(--color-text-muted)">This can't be undone.</p>
+    </div>
+    <div class="stack">
+      <button class="btn btn-destructive" style="background: var(--color-surface)">Discard</button>
+      <button class="btn btn-secondary" style="background: var(--color-surface)">Cancel</button>
+    </div>
+  </div>
+</div></div>
+
+<div class="screen"><div class="label">7 · Saved</div>
+<div class="phone">
+  <div class="center">
+    <div class="check"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-ok)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
+    <p class="heading">Saved</p>
+    <p class="meta">Raslaw weekly sync · 48 min</p>
+  </div>
+</div></div>
+
+<div class="screen"><div class="label">8 · Meeting list</div>
+<div class="phone">
+  <div class="body">
+    <p class="title">Meetings</p>
+    <div class="rows">
+      <div class="card row"><b>Raslaw weekly sync</b><span class="meta">Today · 48 min</span></div>
+      <div class="card row"><b>Meeting, Tue 7 Oct 15:02</b><span class="meta">Today · 12 min</span></div>
+      <div class="card row"><b>DirtArmy sprint review</b><span class="meta">Mon 6 Oct · 1 h 12 min</span></div>
+    </div>
+  </div>
+  <div class="bottom"><button class="control control-record big" aria-label="Record"></button><span class="label">Record</span></div>
+</div></div>
+
+<div class="screen"><div class="label">8b · Meeting list, empty (first open)</div>
+<div class="phone">
+  <div class="body">
+    <p class="title">Meetings</p>
+    <div class="card" style="text-align: center"><b>No meetings yet</b><div class="meta">Tap record at the start of your next one.</div></div>
+  </div>
+  <div class="bottom"><button class="control control-record big" aria-label="Record"></button><span class="label">Record</span></div>
+</div></div>
+
+</div>
+</body>
+</html>

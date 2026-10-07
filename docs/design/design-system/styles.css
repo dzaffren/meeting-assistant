@@ -1,7 +1,4 @@
-@import "tokens/colors.css";
-@import "tokens/typography.css";
-@import "tokens/spacing.css";
-@import "tokens/motion.css";
+@import "tokens.css";
 
 body { margin: 0; background: var(--color-surface); color: var(--color-text); font: var(--text-body); -webkit-font-smoothing: antialiased; }
 a { color: var(--color-accent); }
@@ -33,7 +30,7 @@ a { color: var(--color-accent); }
 .control-record.big { width: var(--control-big); height: var(--control-big); }
 .control-record.big::before { width: 32px; height: 32px; }
 .control-stop { background: var(--color-recording); }
-.control-stop::before { content: ""; width: 22px; height: 22px; border-radius: 4px; background: #FFFFFF; }
+.control-stop::before { content: ""; width: 22px; height: 22px; border-radius: 4px; background: var(--color-on-recording); }
 .control-wrap { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); }
 
 .card { background: var(--color-surface-raised); border-radius: var(--radius-card); padding: var(--space-4) 20px; }
