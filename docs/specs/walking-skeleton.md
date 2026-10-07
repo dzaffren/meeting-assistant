@@ -1,6 +1,6 @@
 # Walking skeleton: record a meeting and save it
 
-**Version:** v1 · **Status:** Draft · **Type:** Skeleton · **Project type:** Mobile UI (Expo)
+**Version:** v1 · **Status:** Refined · **Type:** Skeleton · **Project type:** Mobile UI (Expo)
 
 **Shape doc:** docs/specs/meeting-assistant/shape.md
 **Depends on:** None
@@ -92,7 +92,9 @@ stateDiagram-v2
 ```gherkin
 Scenario: Record a meeting and save it
   Given the app is open on the idle screen and microphone permission is granted
-  When Dzafran taps record, types "Raslaw weekly sync", taps confirm
+  When Dzafran taps record
+  Then the name prompt shows the line "Recording is for your own notes. Tell the room."
+  When Dzafran types "Raslaw weekly sync", taps confirm
   Then the recording screen shows the aurora, the stop control and the title "Raslaw weekly sync" and nothing else
   When Dzafran waits 5 seconds, taps stop, taps "Stop and save"
   Then the screen shows "Saved" with "Raslaw weekly sync · 5 s"
@@ -164,7 +166,7 @@ flowchart LR
 | Screen | States shown | Components |
 |---|---|---|
 | 1 Idle | default | control-record big, label |
-| 2 Name prompt | empty and focused, typed and button pressed | heading, input, btn-primary, btn-secondary |
+| 2 Name prompt | empty and focused, typed and button pressed | heading, input, meta disclaimer, btn-primary, btn-secondary |
 | 3 Microphone refused | default | heading, meta, btn-primary, btn-secondary |
 | 4 Recording | recording | meta title, aurora, aurora-highlight, aurora-fade, control-stop, label |
 | 5 Stop sheet | open over the paused aurora | scrim, sheet, btn-primary, btn-secondary, btn-destructive |
@@ -263,7 +265,7 @@ Greenfield. Every file is new.
 | `src/db.ts` | `openDb()` creates `meetings` on first run; `insertMeeting`, `listMeetings` | scenarios 1, 2, 4 |
 | `app/_layout.tsx` | router stack, dark theme from `tokens.css` values as a TS object | all |
 | `app/index.tsx` | list or empty card, big record control, "Meeting Assistant" title | scenarios 1, 2, 4 |
-| `app/name.tsx` | name modal, blank → `autoName` | scenario 2 |
+| `app/name.tsx` | name modal, blank → `autoName`, disclaimer line under the field | scenarios 1, 2 (O1) |
 | `app/recording.tsx` | aurora, stop control, stop sheet, discard confirm, permission screen with `Linking.openSettings()` | scenarios 1, 3, 4, 5 |
 | `app/saved.tsx` | saved modal, 1.5 s then back to index | scenario 1 |
 | `src/theme.ts` | the design tokens as a TypeScript object, generated from `docs/design/design-system/tokens.css` by `scripts/tokens-to-ts.mjs` | drift check: no hex outside tokens |
@@ -395,12 +397,12 @@ Status: active
 
 | ID | What | Type | Raised at | Owner | Status | Answer |
 | -- | ---- | ---- | --------- | ----- | ------ | ------ |
-| O1 | Is Dzafran allowed to record these meetings (work policy, other people's consent)? (from shape O3) | flag | shape | user | Open | — |
-| O2 | Oldest iPhone and iOS version this must run on. Decides the Expo SDK and iOS floor. (from shape O7) | question | shape | user | Open | — |
+| O1 | Is Dzafran allowed to record these meetings (work policy, other people's consent)? (from shape O3) | flag | shape | user | Resolved | Allowed. The name prompt carries a one-line disclaimer: "Recording is for your own notes. Tell the room." Encryption and retention are a later slice. |
+| O2 | Oldest iPhone and iOS version this must run on. Decides the Expo SDK and iOS floor. (from shape O7) | question | shape | user | Resolved | iOS 16 and up, SDK 57's own floor. Nothing older is targeted. |
 | O3 | Assuming Expo Go on iPhone can record from the microphone with the screen on, without a custom native build. | unproven | spec p1 | poc | Resolved | Expo docs for SDK 57: expo-audio is included in Expo Go and records to .m4a on iOS. Confirmed on the phone in chunk B. |
 | O4 | Assuming Maestro can drive the Expo app on the GitHub Actions Android emulator within a free-tier job time. | unproven | spec p1 | poc | Resolved | Dropped. GitHub free runners can't reliably host the emulator; e2e moves to EAS Workflows (D4). |
-| O5 | Assuming a GitHub repo will exist for this project. CI needs one. | assumption | spec p1 | user | Open | — |
-| O6 | Assuming an Expo account on the free plan covers the e2e builds and Maestro runs for a one-person project. | assumption | spec p3 | user | Open | — |
+| O5 | Assuming a GitHub repo will exist for this project. CI needs one. | assumption | spec p1 | user | Resolved | Yes. Dzafran creates it; chunk A's CI file assumes GitHub. |
+| O6 | Assuming an Expo account on the free plan covers the e2e builds and Maestro runs for a one-person project. | assumption | spec p3 | user | Resolved | Yes. Dzafran signs up at expo.dev; chunk C logs in with `eas login`. |
 | O7 | Assuming `stop()` on iOS returns a usable duration; otherwise wall-clock. | assumption | spec p3 | build | Accepted risk | Fallback is written into the plan and costs nothing. 2026-10-07 |
 
 _Never delete this section or its rows. See references/ledger.md._
