@@ -1,0 +1,45 @@
+# Scenario 1 of docs/specs/walking-skeleton.md: record a meeting and save it.
+appId: com.dzafran.meetingassistant
+---
+- launchApp:
+    clearState: true
+    permissions:
+      microphone: allow
+- assertVisible:
+    id: screen-list
+- tapOn:
+    id: record
+- assertVisible:
+    id: screen-name
+- assertVisible: "Recording is for your own notes. Tell the room."
+- tapOn:
+    id: meeting-name
+- inputText: "Raslaw weekly sync"
+- tapOn:
+    id: start-recording
+- assertVisible:
+    id: screen-recording
+- assertVisible: "Raslaw weekly sync"
+- assertNotVisible: "Meetings"
+# Maestro has no sleep. Waiting for an id that never renders, with
+# optional: true, is the documented way to pause for a fixed time.
+- extendedWaitUntil:
+    visible:
+      id: five-seconds-of-meeting
+    timeout: 5000
+    optional: true
+- tapOn:
+    id: stop
+- assertVisible: "Stop and save?"
+- tapOn:
+    id: stop-and-save
+- assertVisible: "Saved"
+- assertVisible:
+    text: "Raslaw weekly sync · [4-7] s"
+- extendedWaitUntil:
+    visible:
+      id: screen-list
+    timeout: 4000
+- assertVisible: "Raslaw weekly sync"
+- assertVisible:
+    text: "Today · [4-7] s"

@@ -1,6 +1,6 @@
 # Walking skeleton: record a meeting and save it
 
-**Version:** v1 · **Status:** Refined · **Type:** Skeleton · **Project type:** Mobile UI (Expo)
+**Version:** v1 · **Status:** Built · **Type:** Skeleton · **Project type:** Mobile UI (Expo)
 
 **Shape doc:** docs/specs/meeting-assistant/shape.md
 **Depends on:** None
@@ -104,8 +104,8 @@ Scenario: Record a meeting and save it
 Scenario: Empty name is auto-named
   Given the name prompt is open on Tue 7 Oct 2026 at 15:02
   When Dzafran taps confirm without typing
-  Then recording starts with the title "Meeting, Tue 7 Oct 15:02"
-  And after saving, the list shows "Meeting, Tue 7 Oct 15:02"
+  Then recording starts with the title "Meeting, Wed 7 Oct 15:02"
+  And after saving, the list shows "Meeting, Wed 7 Oct 15:02"
 
 Scenario: Keep recording from the stop sheet
   Given a recording called "DirtArmy sprint review" has run for 10 seconds
@@ -217,7 +217,7 @@ flowchart TB
     N -- "title" --> R
     R -- "start / stop / discard" --> REC
     REC -- "temp .m4a uri" --> FS
-    FS -- "documents/meetings/{id}.m4a" --> DB
+    FS -- "documents/meetings/<id>.m4a" --> DB
     DB -- "rows" --> L
     R --> S --> L
     N -- "blank title" --> NM
@@ -236,13 +236,13 @@ sequenceDiagram
     D->>R: confirm name "Raslaw weekly sync"
     R->>A: requestRecordingPermissionsAsync()
     A-->>R: granted
-    R->>A: setAudioModeAsync({allowsRecording:true}) · prepareToRecordAsync() · record()
+    R->>A: setAudioModeAsync(allowsRecording true) · prepareToRecordAsync() · record()
     D->>R: tap stop, tap "Stop and save"
     R->>A: stop()
     A-->>R: uri (cache .m4a), durationMillis
     R->>F: moveToMeetings(uri, id)
-    F-->>R: documents/meetings/{id}.m4a
-    R->>S: insertMeeting({id, title, startedAt, durationMs, audioPath})
+    F-->>R: documents/meetings/<id>.m4a
+    R->>S: insertMeeting(id, title, startedAt, durationMs, audioPath)
     R-->>D: Saved screen, then list
 ```
 
@@ -258,16 +258,19 @@ Greenfield. Every file is new.
 |---|---|---|
 | `package.json`, `pnpm-lock.yaml`, `tsconfig.json`, `app.json`, `babel.config.js` | Expo SDK 57 app, TypeScript strict, expo-router, expo-audio plugin with `microphonePermission: "Meeting Assistant needs the microphone to record."` | all scenarios; scenario 5 copy |
 | `jest.config.js`, `jest.setup.ts` | jest-expo preset; mocks for expo-audio, expo-sqlite, expo-file-system | unit tests run without a phone |
-| `src/name.ts` | `autoName(date)` → "Meeting, Tue 7 Oct 15:02"; `formatDuration(ms)` → "5 s", "48 min", "1 h 12 min" | scenarios 1, 2 |
+| `src/name.ts` | `autoName(date)` → "Meeting, Wed 7 Oct 15:02"; `formatDuration(ms)` → "5 s", "48 min", "1 h 12 min" | scenarios 1, 2 |
 | `src/machine.ts` | reducer over the pause 1 state diagram: idle, naming, noMic, recording, stopSheet, discardConfirm, saved | scenarios 1 to 5, tested in Jest |
 | `src/recorder.ts` | `start()`, `stop()`, `discard()` over `useAudioRecorder(RecordingPresets.HIGH_QUALITY)`; permission check; `setAudioModeAsync` | scenarios 1, 3, 4, 5 |
 | `src/storage.ts` | `moveToMeetings(uri, id)`, `deleteRecording(uri)`; folder `documents/meetings/` | scenarios 1, 4 |
 | `src/db.ts` | `openDb()` creates `meetings` on first run; `insertMeeting`, `listMeetings` | scenarios 1, 2, 4 |
-| `app/_layout.tsx` | router stack, dark theme from `tokens.css` values as a TS object | all |
-| `app/index.tsx` | list or empty card, big record control, "Meeting Assistant" title | scenarios 1, 2, 4 |
-| `app/name.tsx` | name modal, blank → `autoName`, disclaimer line under the field | scenarios 1, 2 (O1) |
-| `app/recording.tsx` | aurora, stop control, stop sheet, discard confirm, permission screen with `Linking.openSettings()` | scenarios 1, 3, 4, 5 |
-| `app/saved.tsx` | saved modal, 1.5 s then back to index | scenario 1 |
+| `app/_layout.tsx` | router stack, dark background, light status bar | all |
+| `app/index.tsx` | the one route: holds the reducer and the recorder, renders a screen per state, saves and discards | all |
+| `src/ui.tsx` | Button, Control, Sheet and the shared styles, all from `src/theme.ts` | all |
+| `src/screens/ListScreen.tsx` | list or empty card, big record control | scenarios 1, 2, 4 |
+| `src/screens/NamePrompt.tsx` | name field, disclaimer, blank handled by the reducer | scenarios 1, 2 |
+| `src/screens/NoMic.tsx` | permission copy, `openSettings()` | scenario 5 |
+| `src/screens/RecordingScreen.tsx` | aurora, stop control, stop sheet, discard confirm | scenarios 1, 3, 4 |
+| `src/screens/SavedScreen.tsx` | saved, then back after 1.5 s | scenario 1 |
 | `src/theme.ts` | the design tokens as a TypeScript object, generated from `docs/design/design-system/tokens.css` by `scripts/tokens-to-ts.mjs` | drift check: no hex outside tokens |
 | `.maestro/record-and-save.yml` | the one e2e flow: scenario 1 | e2e |
 | `.github/workflows/ci.yml` | pnpm install, `tsc --noEmit`, `jest` on push and PR | CI |
@@ -313,7 +316,7 @@ the five scenarios asks for them.
 | **Load** | one user, a few recordings a day, files of 1 to 60 MB each |
 | **Breaks first** | phone storage. At 10× (hundreds of hour-long files) the documents folder fills; slice 3 adds delete. The list query is unindexed but trivial at this size. |
 | **Security surface** | only the phone's owner can open it · trusts the microphone and the title field (stored as text, never executed) · no secrets · stores audio and titles in the app sandbox, nothing leaves the phone |
-| **Proof it works** | `console.log("meeting saved", {id, durationMs, bytes})` after insert; in the list, the new row with the right duration |
+| **Proof it works** | `console.log("meeting saved", id, durationMs, bytes)` after insert; in the list, the new row with the right duration |
 | **Rollout** | no flag. Expo Go on the phone; rollback is reloading the previous commit in Expo Go. |
 
 ### Test plan
@@ -332,6 +335,12 @@ sync", tap "Start recording", wait 5 s, tap Stop, tap "Stop and save", assert
 "Saved", assert the list shows "Raslaw weekly sync" and "5 s". No e2e harness
 exists yet; setting up Maestro locally and the EAS workflow is chunk C.
 
+**Built as one route, not four.** The plan listed `app/name.tsx`,
+`app/recording.tsx` and `app/saved.tsx` as separate routes. The recorder hook
+has to stay mounted for the whole recording, and the reducer is one object, so
+one route in `app/index.tsx` renders a screen component per state instead.
+Same screens, fewer moving parts.
+
 ### Chunks
 
 | Chunk | Scenarios | Files owned |
@@ -339,6 +348,8 @@ exists yet; setting up Maestro locally and the EAS workflow is chunk C.
 | A | 2, machine | `package.json`, `pnpm-lock.yaml`, `tsconfig.json`, `app.json`, `babel.config.js`, `jest.config.js`, `jest.setup.ts`, `src/name.ts`, `src/machine.ts`, `src/theme.ts`, `scripts/tokens-to-ts.mjs`, `src/__tests__/name.test.ts`, `src/__tests__/machine.test.ts`, `.github/workflows/ci.yml` |
 | B | 1, 3, 4, 5 | `src/recorder.ts`, `src/storage.ts`, `src/db.ts`, `src/__tests__/storage.test.ts`, `src/__tests__/db.test.ts`, `app/_layout.tsx`, `app/index.tsx`, `app/name.tsx`, `app/recording.tsx`, `app/saved.tsx` |
 | C | 1 e2e | `.maestro/record-and-save.yml`, `eas.json`, `.eas/workflows/e2e-android.yml` |
+
+Built serially in this order: each chunk depends on the one before, so parallel worktrees would have gained nothing.
 
 B depends on A. C depends on B. Shared config and the lockfile belong to A.
 
@@ -354,44 +365,7 @@ B depends on A. C depends on B. Shared config and the lockfile belong to A.
 
 ### Decisions to record
 
-## D2 · 2026-10-07 · Expo (React Native) with TypeScript
-
-Why: one codebase for Android and iPhone, runs on a real iPhone through Expo Go
-without a Mac, and expo-audio is the best-documented recording path. Dzafran
-delegated the choice.
-Rejected: Flutter (smaller audio ecosystem, a new language for no gain); Kotlin
-Multiplatform (iOS side immature); two native apps (double the work for one user).
-Source: docs/specs/walking-skeleton.md
-Status: active
-
-## D3 · 2026-10-07 · Everything on the phone: SQLite rows, audio files in the sandbox, no server
-
-Why: slice 0 has one user and no sharing. A server adds hosting, auth and a
-network failure mode to a skeleton whose job is to prove recording works.
-Rejected: a hosted database (nothing to sync yet); a JSON file for the list
-(no transactions, hand-rolled locking); storing audio in the database (files of
-up to 60 MB belong on disk).
-Source: docs/specs/walking-skeleton.md
-Status: active
-
-## D4 · 2026-10-07 · GitHub Actions for typecheck and unit tests, EAS Workflows for the Maestro e2e
-
-Why: unit tests need no emulator and run free on GitHub. The e2e needs an Android
-emulator, which Expo's documented EAS Workflows provide in the cloud.
-Rejected: Android emulator on GitHub's free runners (nested virtualisation is
-unreliable there and an APK build adds 10+ min per run); iOS simulator on CI
-(paid macOS minutes).
-Source: docs/specs/walking-skeleton.md
-Status: active
-
-## D5 · 2026-10-07 · Maestro for the e2e, pnpm for packages
-
-Why: Maestro drives the built app from YAML and is what EAS Workflows run; pnpm
-is fast and refuses to install against a stale lockfile.
-Rejected: Detox (needs a native build toolchain on the runner and gray-box
-hooks in the app); npm (slower, looser lockfile).
-Source: docs/specs/walking-skeleton.md
-Status: active
+Recorded as D2, D3, D4, D5.
 
 ## Open items
 
@@ -418,3 +392,6 @@ _Never delete this section or its rows. See references/ledger.md._
 - **Expo Router** — file-based screens: a file in `app/` is a screen
 - **Reducer** — a pure function from (state, event) to the next state; the state machine lives here so it can be tested without a phone
 - **Walking skeleton** — the thinnest path through every layer, deployed, so later work has nothing structural left to discover
+| O8 | The e2e flow has not been run. No Maestro, Android SDK or EAS login on the build machine. | flag | build | user | Accepted risk | Runs on the first PR via EAS Workflows, and on the iPhone by hand. Reported in the build summary. 2026-10-07 |
+| O9 | node-forge 1.4.0 under expo's command-line tool has a high advisory (GHSA-86w9-cpqp-85rv) and no patched release. It is developer tooling for update code signing, which this app does not use, and Metro bundles only what the app imports. | flag | review | user | Accepted risk | No fix exists upstream. Re-check with `pnpm audit --prod` at each Expo SDK bump. 2026-10-07 |
+| O10 | The e2e cannot read the app sandbox, so "an audio file of about 5 seconds exists" is proven only by the byte count in the saved log and by hand on the iPhone. | flag | review | user | Accepted risk | The log line now carries `bytes`; the PR checklist asks for it to be read off the EAS run log. 2026-10-07 |

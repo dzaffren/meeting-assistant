@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Meeting Assistant",
+    "slug": "meeting-assistant",
+    "scheme": "meetingassistant",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0B0C0F",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.dzafran.meetingassistant",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Meeting Assistant needs the microphone to record."
+      }
+    },
+    "android": {
+      "package": "com.dzafran.meetingassistant",
+      "adaptiveIcon": {
+        "backgroundColor": "#0B0C0F",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "plugins": [
+      "expo-router",
+      ["expo-audio", { "microphonePermission": "Meeting Assistant needs the microphone to record." }],
+      "expo-sqlite"
+    ],
+    "experiments": { "typedRoutes": true }
+  }
+}
