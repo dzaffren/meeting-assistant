@@ -15,12 +15,14 @@ main { padding: 24px; max-width: 390px; display: flex; flex-direction: column; g
 .sw b { font-weight: 400; font-size: 15px; }
 .sw i { font: var(--text-label); color: var(--color-text-muted); font-style: normal; }
 p { margin: 0; }
+.aurora-fill { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(60,70,160,.35), rgba(99,120,255,.3) 30%, rgba(140,90,255,.5) 60%, rgba(111,163,255,.85) 85%, rgba(150,190,255,1)); }
+.aurora-fill::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 180px; background: linear-gradient(to bottom, rgba(11,12,15,.55), rgba(11,12,15,0)); }
 </style>
 </head>
 <body>
 <main>
 <h1 class="heading">Recording</h1>
-<div style="position: relative; width: 390px; height: 844px; overflow: hidden; background: var(--color-surface); border-radius: 24px"><p class="meta" style="text-align: center; padding-top: 64px; margin: 0">Raslaw weekly sync</p><div class="aurora"></div><div class="aurora-highlight"></div><div class="aurora-fade"></div><div class="control-wrap" style="position: absolute; left: 0; right: 0; bottom: 36px"><button class="control control-stop" aria-label="Stop recording"></button><span class="label">Stop</span></div></div>
+<div style="position: relative; width: 390px; height: 844px; overflow: hidden; background: var(--color-surface); border-radius: 24px"><div class="aurora-fill"></div><p class="meta" style="text-align: center; padding-top: 64px; margin: 0; position: relative">Raslaw weekly sync</p><div class="control-wrap" style="position: absolute; left: 0; right: 0; bottom: 36px"><button class="control control-stop" aria-label="Stop recording"></button><span class="label">Stop</span></div></div>
 </main>
 </body>
 </html>
