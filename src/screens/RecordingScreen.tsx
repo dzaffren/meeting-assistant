@@ -1,7 +1,7 @@
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useRef } from 'react';
-import { AccessibilityInfo, Animated, Easing, Text, View } from 'react-native';
+import { AccessibilityInfo, Animated, Easing, StyleSheet, Text, View } from 'react-native';
 import type { State } from '../machine';
 import { formatDuration } from '../name';
 import { colors } from '../theme';
@@ -25,10 +25,10 @@ export function RecordingScreen({ state, busy, error, onStop, onKeep, onSave, on
   const breathing = state.kind === 'recording';
   return (
     <View style={styles.screen} testID="screen-recording">
+      <Aurora active={breathing} />
       <View style={{ paddingTop: 64, alignItems: 'center' }}>
         <Text style={styles.meta}>{state.title}</Text>
       </View>
-      <Aurora active={breathing} />
       <View style={styles.bottom}>
         <Control kind="stop" label="Stop" onPress={onStop} testID="stop" />
       </View>
@@ -65,42 +65,48 @@ export function RecordingScreen({ state, busy, error, onStop, onKeep, onSave, on
   );
 }
 
-// The "still recording" signal: a full-width glow rising from the bottom
-// edge like a horizon, blue into violet, blurred, with two soft lights that
-// drift across it. Holds still under a sheet and under reduced motion.
-function Aurora({ active }: { active: boolean }) {
-  const t = useRef(new Animated.Value(0)).current;
+// The "still recording" signal: a glow rising from the bottom edge like a
+// horizon, blue into violet, with three soft lights drifting on their own
+// clocks. The blur covers the whole screen so it has no visible edge. Holds
+// still under a sheet and under reduced motion.
+function useLoop(active: boolean, duration: number) {
+  const v = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     let loop: Animated.CompositeAnimation | undefined;
     AccessibilityInfo.isReduceMotionEnabled().then((reduce) => {
       if (!active || reduce) return;
       loop = Animated.loop(Animated.sequence([
-        Animated.timing(t, { toValue: 1, duration: 3200, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
-        Animated.timing(t, { toValue: 0, duration: 3200, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+        Animated.timing(v, { toValue: 1, duration, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+        Animated.timing(v, { toValue: 0, duration, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
       ]));
       loop.start();
     });
     return () => loop?.stop();
-  }, [active, t]);
+  }, [active, duration, v]);
+  return v;
+}
 
-  const rise = t.interpolate({ inputRange: [0, 1], outputRange: [1, 1.12] });
-  const glow = t.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1] });
-  const driftLeft = t.interpolate({ inputRange: [0, 1], outputRange: [-40, 40] });
-  const driftRight = t.interpolate({ inputRange: [0, 1], outputRange: [30, -30] });
+const between = (v: Animated.Value, a: number, b: number) => v.interpolate({ inputRange: [0, 1], outputRange: [a, b] });
+
+function Aurora({ active }: { active: boolean }) {
+  const slow = useLoop(active, 4200);
+  const mid = useLoop(active, 2900);
+  const fast = useLoop(active, 2100);
 
   return (
-    <View pointerEvents="none" style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 340, overflow: 'hidden' }}>
-      <Animated.View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 340, opacity: glow, transform: [{ scaleY: rise }], transformOrigin: 'bottom' }}>
+    <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+      <Animated.View style={{ position: 'absolute', left: -60, right: -60, bottom: 0, height: 480, opacity: between(slow, 0.75, 1), transform: [{ scaleY: between(slow, 1, 1.1) }], transformOrigin: 'bottom' }}>
         <LinearGradient
-          colors={['rgba(11,12,15,0)', 'rgba(99,120,255,0.18)', 'rgba(140,90,255,0.45)', 'rgba(111,163,255,0.85)', 'rgba(150,190,255,1)']}
-          locations={[0, 0.35, 0.6, 0.85, 1]}
-          style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 340 }}
+          colors={['rgba(11,12,15,0)', 'rgba(99,120,255,0.12)', 'rgba(140,90,255,0.4)', 'rgba(111,163,255,0.8)', 'rgba(150,190,255,1)']}
+          locations={[0, 0.45, 0.68, 0.88, 1]}
+          style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 480 }}
         />
-        <Animated.View style={{ position: 'absolute', left: 40, bottom: -60, width: 260, height: 200, borderRadius: 130, backgroundColor: 'rgba(190,160,255,0.55)', transform: [{ translateX: driftLeft }] }} />
-        <Animated.View style={{ position: 'absolute', right: 20, bottom: -40, width: 220, height: 160, borderRadius: 110, backgroundColor: 'rgba(111,163,255,0.5)', transform: [{ translateX: driftRight }] }} />
+        <Animated.View style={{ position: 'absolute', left: 30, bottom: -70, width: 280, height: 220, borderRadius: 140, backgroundColor: 'rgba(190,160,255,0.6)', transform: [{ translateX: between(mid, -50, 50) }, { translateY: between(fast, 0, -18) }] }} />
+        <Animated.View style={{ position: 'absolute', right: 10, bottom: -50, width: 240, height: 180, borderRadius: 120, backgroundColor: 'rgba(111,163,255,0.55)', transform: [{ translateX: between(slow, 40, -40) }, { translateY: between(mid, -12, 10) }] }} />
+        <Animated.View style={{ position: 'absolute', left: 150, bottom: 20, width: 200, height: 140, borderRadius: 100, backgroundColor: 'rgba(120,200,255,0.35)', transform: [{ translateX: between(fast, -70, 70) }, { translateY: between(slow, 10, -24) }] }} />
       </Animated.View>
-      <BlurView intensity={70} tint="dark" style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 340 }} />
-      <LinearGradient colors={['rgba(11,12,15,0)', colors.surface]} locations={[0.3, 1]} style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 150 }} />
+      <BlurView intensity={80} tint="dark" style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={['rgba(11,12,15,0)', colors.surface]} locations={[0.25, 1]} style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 160 }} />
     </View>
   );
 }
