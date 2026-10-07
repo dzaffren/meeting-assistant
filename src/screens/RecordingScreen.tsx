@@ -1,3 +1,4 @@
+import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useRef } from 'react';
 import { AccessibilityInfo, Animated, Easing, Text, View } from 'react-native';
@@ -64,39 +65,42 @@ export function RecordingScreen({ state, busy, error, onStop, onKeep, onSave, on
   );
 }
 
-// The "still recording" signal: a wide blue-to-violet band low on the screen
-// that breathes. Holds still under a sheet and under reduced motion.
+// The "still recording" signal: a full-width glow rising from the bottom
+// edge like a horizon, blue into violet, blurred, with two soft lights that
+// drift across it. Holds still under a sheet and under reduced motion.
 function Aurora({ active }: { active: boolean }) {
-  const breath = useRef(new Animated.Value(0)).current;
+  const t = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     let loop: Animated.CompositeAnimation | undefined;
     AccessibilityInfo.isReduceMotionEnabled().then((reduce) => {
       if (!active || reduce) return;
       loop = Animated.loop(Animated.sequence([
-        Animated.timing(breath, { toValue: 1, duration: 2000, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
-        Animated.timing(breath, { toValue: 0, duration: 2000, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
+        Animated.timing(t, { toValue: 1, duration: 3200, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+        Animated.timing(t, { toValue: 0, duration: 3200, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
       ]));
       loop.start();
     });
     return () => loop?.stop();
-  }, [active, breath]);
+  }, [active, t]);
 
-  const scaleY = breath.interpolate({ inputRange: [0, 1], outputRange: [1, 1.25] });
-  const scaleX = breath.interpolate({ inputRange: [0, 1], outputRange: [1, 1.06] });
-  const opacity = breath.interpolate({ inputRange: [0, 1], outputRange: [0.85, 1] });
+  const rise = t.interpolate({ inputRange: [0, 1], outputRange: [1, 1.12] });
+  const glow = t.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1] });
+  const driftLeft = t.interpolate({ inputRange: [0, 1], outputRange: [-40, 40] });
+  const driftRight = t.interpolate({ inputRange: [0, 1], outputRange: [30, -30] });
 
   return (
-    <Animated.View pointerEvents="none" style={{ position: 'absolute', left: -65, right: -65, bottom: 120, height: 220, alignItems: 'center', opacity, transform: [{ scaleX }, { scaleY }] }}>
-      <LinearGradient
-        colors={['rgba(111,163,255,0)', 'rgba(140,90,255,0.45)', 'rgba(99,120,255,0.75)', 'rgba(111,163,255,0.95)']}
-        locations={[0, 0.45, 0.7, 1]}
-        style={{ width: 520, height: 220, borderRadius: 260 }}
-      />
-      <LinearGradient
-        colors={['rgba(190,160,255,0)', 'rgba(190,160,255,0.9)']}
-        style={{ position: 'absolute', bottom: 30, width: 260, height: 90, borderRadius: 130 }}
-      />
-      <LinearGradient colors={['rgba(11,12,15,0)', colors.surface]} locations={[0, 0.55]} style={{ position: 'absolute', left: 0, right: 0, bottom: -120, height: 120 }} />
-    </Animated.View>
+    <View pointerEvents="none" style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 340, overflow: 'hidden' }}>
+      <Animated.View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 340, opacity: glow, transform: [{ scaleY: rise }], transformOrigin: 'bottom' }}>
+        <LinearGradient
+          colors={['rgba(11,12,15,0)', 'rgba(99,120,255,0.18)', 'rgba(140,90,255,0.45)', 'rgba(111,163,255,0.85)', 'rgba(150,190,255,1)']}
+          locations={[0, 0.35, 0.6, 0.85, 1]}
+          style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 340 }}
+        />
+        <Animated.View style={{ position: 'absolute', left: 40, bottom: -60, width: 260, height: 200, borderRadius: 130, backgroundColor: 'rgba(190,160,255,0.55)', transform: [{ translateX: driftLeft }] }} />
+        <Animated.View style={{ position: 'absolute', right: 20, bottom: -40, width: 220, height: 160, borderRadius: 110, backgroundColor: 'rgba(111,163,255,0.5)', transform: [{ translateX: driftRight }] }} />
+      </Animated.View>
+      <BlurView intensity={70} tint="dark" style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 340 }} />
+      <LinearGradient colors={['rgba(11,12,15,0)', colors.surface]} locations={[0.3, 1]} style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 150 }} />
+    </View>
   );
 }
