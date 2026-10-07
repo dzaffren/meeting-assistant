@@ -11,7 +11,8 @@ export function Button({ label, kind = 'primary', onSurface, style, ...rest }: B
       style={({ pressed }) => [
         styles.button,
         kind === 'primary' && { backgroundColor: colors.accent },
-        kind === 'secondary' && { backgroundColor: onSurface ? colors.surface : colors.surfaceRaised },
+        kind !== 'primary' && { backgroundColor: onSurface ? colors.surface : colors.surfaceRaised },
+        kind === 'destructive' && !onSurface && { backgroundColor: 'transparent' },
         pressed && styles.pressed,
         rest.disabled && styles.disabled,
         style as ViewStyle,
