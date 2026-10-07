@@ -1,6 +1,6 @@
 # Walking skeleton: record a meeting and save it
 
-**Version:** v1 · **Status:** Refined · **Type:** Skeleton · **Project type:** Mobile UI (Expo)
+**Version:** v1 · **Status:** Built · **Type:** Skeleton · **Project type:** Mobile UI (Expo)
 
 **Shape doc:** docs/specs/meeting-assistant/shape.md
 **Depends on:** None
@@ -263,11 +263,14 @@ Greenfield. Every file is new.
 | `src/recorder.ts` | `start()`, `stop()`, `discard()` over `useAudioRecorder(RecordingPresets.HIGH_QUALITY)`; permission check; `setAudioModeAsync` | scenarios 1, 3, 4, 5 |
 | `src/storage.ts` | `moveToMeetings(uri, id)`, `deleteRecording(uri)`; folder `documents/meetings/` | scenarios 1, 4 |
 | `src/db.ts` | `openDb()` creates `meetings` on first run; `insertMeeting`, `listMeetings` | scenarios 1, 2, 4 |
-| `app/_layout.tsx` | router stack, dark theme from `tokens.css` values as a TS object | all |
-| `app/index.tsx` | list or empty card, big record control, "Meeting Assistant" title | scenarios 1, 2, 4 |
-| `app/name.tsx` | name modal, blank → `autoName`, disclaimer line under the field | scenarios 1, 2 (O1) |
-| `app/recording.tsx` | aurora, stop control, stop sheet, discard confirm, permission screen with `Linking.openSettings()` | scenarios 1, 3, 4, 5 |
-| `app/saved.tsx` | saved modal, 1.5 s then back to index | scenario 1 |
+| `app/_layout.tsx` | router stack, dark background, light status bar | all |
+| `app/index.tsx` | the one route: holds the reducer and the recorder, renders a screen per state, saves and discards | all |
+| `src/ui.tsx` | Button, Control, Sheet and the shared styles, all from `src/theme.ts` | all |
+| `src/screens/ListScreen.tsx` | list or empty card, big record control | scenarios 1, 2, 4 |
+| `src/screens/NamePrompt.tsx` | name field, disclaimer, blank handled by the reducer | scenarios 1, 2 |
+| `src/screens/NoMic.tsx` | permission copy, `openSettings()` | scenario 5 |
+| `src/screens/RecordingScreen.tsx` | aurora, stop control, stop sheet, discard confirm | scenarios 1, 3, 4 |
+| `src/screens/SavedScreen.tsx` | saved, then back after 1.5 s | scenario 1 |
 | `src/theme.ts` | the design tokens as a TypeScript object, generated from `docs/design/design-system/tokens.css` by `scripts/tokens-to-ts.mjs` | drift check: no hex outside tokens |
 | `.maestro/record-and-save.yml` | the one e2e flow: scenario 1 | e2e |
 | `.github/workflows/ci.yml` | pnpm install, `tsc --noEmit`, `jest` on push and PR | CI |
@@ -332,6 +335,12 @@ sync", tap "Start recording", wait 5 s, tap Stop, tap "Stop and save", assert
 "Saved", assert the list shows "Raslaw weekly sync" and "5 s". No e2e harness
 exists yet; setting up Maestro locally and the EAS workflow is chunk C.
 
+**Built as one route, not four.** The plan listed `app/name.tsx`,
+`app/recording.tsx` and `app/saved.tsx` as separate routes. The recorder hook
+has to stay mounted for the whole recording, and the reducer is one object, so
+one route in `app/index.tsx` renders a screen component per state instead.
+Same screens, fewer moving parts.
+
 ### Chunks
 
 | Chunk | Scenarios | Files owned |
@@ -339,6 +348,8 @@ exists yet; setting up Maestro locally and the EAS workflow is chunk C.
 | A | 2, machine | `package.json`, `pnpm-lock.yaml`, `tsconfig.json`, `app.json`, `babel.config.js`, `jest.config.js`, `jest.setup.ts`, `src/name.ts`, `src/machine.ts`, `src/theme.ts`, `scripts/tokens-to-ts.mjs`, `src/__tests__/name.test.ts`, `src/__tests__/machine.test.ts`, `.github/workflows/ci.yml` |
 | B | 1, 3, 4, 5 | `src/recorder.ts`, `src/storage.ts`, `src/db.ts`, `src/__tests__/storage.test.ts`, `src/__tests__/db.test.ts`, `app/_layout.tsx`, `app/index.tsx`, `app/name.tsx`, `app/recording.tsx`, `app/saved.tsx` |
 | C | 1 e2e | `.maestro/record-and-save.yml`, `eas.json`, `.eas/workflows/e2e-android.yml` |
+
+Built serially in this order: each chunk depends on the one before, so parallel worktrees would have gained nothing.
 
 B depends on A. C depends on B. Shared config and the lockfile belong to A.
 
@@ -381,3 +392,4 @@ _Never delete this section or its rows. See references/ledger.md._
 - **Expo Router** — file-based screens: a file in `app/` is a screen
 - **Reducer** — a pure function from (state, event) to the next state; the state machine lives here so it can be tested without a phone
 - **Walking skeleton** — the thinnest path through every layer, deployed, so later work has nothing structural left to discover
+| O8 | The e2e flow has not been run. No Maestro, Android SDK or EAS login on the build machine. | flag | build | user | Accepted risk | Runs on the first PR via EAS Workflows, and on the iPhone by hand. Reported in the build summary. 2026-10-07 |
