@@ -27,12 +27,43 @@ export const radius = {
   sheet: 24
 } as const;
 export const text = {
-  title: { fontSize: 28, lineHeight: 34, fontWeight: '600' },
-  heading: { fontSize: 20, lineHeight: 26, fontWeight: '600' },
-  body: { fontSize: 17, lineHeight: 26 },
-  meta: { fontSize: 14, lineHeight: 20 },
-  label: { fontSize: 12, lineHeight: 16 },
-  button: { fontSize: 17, lineHeight: 26, fontWeight: '600' },
+  title: {
+    fontSize: 28,
+    lineHeight: 34,
+    fontWeight: "600"
+  },
+  heading: {
+    fontSize: 20,
+    lineHeight: 26,
+    fontWeight: "600"
+  },
+  body: {
+    fontSize: 17,
+    lineHeight: 26,
+    fontWeight: "400"
+  },
+  meta: {
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: "400"
+  },
+  label: {
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: "400"
+  },
+  button: {
+    fontSize: 17,
+    lineHeight: 26,
+    fontWeight: "600"
+  }
 } as const;
-export const control = { size: 64, big: 88, button: 56, touchMin: 44 } as const;
-export const motion = { press: 160 } as const;
+export const control = {
+  size: 64,
+  big: 88,
+  touchMin: 44,
+  button: 56
+} as const;
+export const motion = {
+  press: 160
+} as const;
