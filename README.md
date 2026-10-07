@@ -19,7 +19,7 @@ Used by one person, Dzafran, in Teams, Zoom, Meet and in-room meetings.
 
 ## Features
 
-Nothing shipped yet
+- tap record, name the meeting, record, stop, save or discard, see it in the list
 
 ## Docs
 

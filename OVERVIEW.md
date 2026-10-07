@@ -28,7 +28,7 @@ Used by one person, Dzafran, in Teams, Zoom, Meet and in-room meetings.
 
 | Slice            | Status | What it does                                              | Page |
 | ---------------- | ------ | --------------------------------------------------------- | ---- |
-| walking-skeleton | Built  | tap record, name the meeting, record, stop, save or discard, see it in the list | none, Markdown only |
+| walking-skeleton | Shipped | tap record, name the meeting, record, stop, save or discard, see it in the list | none, Markdown only |
 
 ## More
 
