@@ -104,8 +104,8 @@ Scenario: Record a meeting and save it
 Scenario: Empty name is auto-named
   Given the name prompt is open on Tue 7 Oct 2026 at 15:02
   When Dzafran taps confirm without typing
-  Then recording starts with the title "Meeting, Tue 7 Oct 15:02"
-  And after saving, the list shows "Meeting, Tue 7 Oct 15:02"
+  Then recording starts with the title "Meeting, Wed 7 Oct 15:02"
+  And after saving, the list shows "Meeting, Wed 7 Oct 15:02"
 
 Scenario: Keep recording from the stop sheet
   Given a recording called "DirtArmy sprint review" has run for 10 seconds
@@ -258,7 +258,7 @@ Greenfield. Every file is new.
 |---|---|---|
 | `package.json`, `pnpm-lock.yaml`, `tsconfig.json`, `app.json`, `babel.config.js` | Expo SDK 57 app, TypeScript strict, expo-router, expo-audio plugin with `microphonePermission: "Meeting Assistant needs the microphone to record."` | all scenarios; scenario 5 copy |
 | `jest.config.js`, `jest.setup.ts` | jest-expo preset; mocks for expo-audio, expo-sqlite, expo-file-system | unit tests run without a phone |
-| `src/name.ts` | `autoName(date)` → "Meeting, Tue 7 Oct 15:02"; `formatDuration(ms)` → "5 s", "48 min", "1 h 12 min" | scenarios 1, 2 |
+| `src/name.ts` | `autoName(date)` → "Meeting, Wed 7 Oct 15:02"; `formatDuration(ms)` → "5 s", "48 min", "1 h 12 min" | scenarios 1, 2 |
 | `src/machine.ts` | reducer over the pause 1 state diagram: idle, naming, noMic, recording, stopSheet, discardConfirm, saved | scenarios 1 to 5, tested in Jest |
 | `src/recorder.ts` | `start()`, `stop()`, `discard()` over `useAudioRecorder(RecordingPresets.HIGH_QUALITY)`; permission check; `setAudioModeAsync` | scenarios 1, 3, 4, 5 |
 | `src/storage.ts` | `moveToMeetings(uri, id)`, `deleteRecording(uri)`; folder `documents/meetings/` | scenarios 1, 4 |
