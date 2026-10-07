@@ -29,7 +29,7 @@ flowchart TB
     IDX -- events --> M
     IDX -- start / stop / discard --> REC
     REC -- cache .m4a --> FS
-    FS -- documents/meetings/{id}.m4a --> DB
+    FS -- documents/meetings/<id>.m4a --> DB
     DB -- rows --> IDX
     IDX --> SCR --> UI
 ```

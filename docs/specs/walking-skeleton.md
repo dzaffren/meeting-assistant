@@ -217,7 +217,7 @@ flowchart TB
     N -- "title" --> R
     R -- "start / stop / discard" --> REC
     REC -- "temp .m4a uri" --> FS
-    FS -- "documents/meetings/{id}.m4a" --> DB
+    FS -- "documents/meetings/<id>.m4a" --> DB
     DB -- "rows" --> L
     R --> S --> L
     N -- "blank title" --> NM
@@ -236,13 +236,13 @@ sequenceDiagram
     D->>R: confirm name "Raslaw weekly sync"
     R->>A: requestRecordingPermissionsAsync()
     A-->>R: granted
-    R->>A: setAudioModeAsync({allowsRecording:true}) · prepareToRecordAsync() · record()
+    R->>A: setAudioModeAsync(allowsRecording true) · prepareToRecordAsync() · record()
     D->>R: tap stop, tap "Stop and save"
     R->>A: stop()
     A-->>R: uri (cache .m4a), durationMillis
     R->>F: moveToMeetings(uri, id)
-    F-->>R: documents/meetings/{id}.m4a
-    R->>S: insertMeeting({id, title, startedAt, durationMs, audioPath})
+    F-->>R: documents/meetings/<id>.m4a
+    R->>S: insertMeeting(id, title, startedAt, durationMs, audioPath)
     R-->>D: Saved screen, then list
 ```
 
@@ -316,7 +316,7 @@ the five scenarios asks for them.
 | **Load** | one user, a few recordings a day, files of 1 to 60 MB each |
 | **Breaks first** | phone storage. At 10× (hundreds of hour-long files) the documents folder fills; slice 3 adds delete. The list query is unindexed but trivial at this size. |
 | **Security surface** | only the phone's owner can open it · trusts the microphone and the title field (stored as text, never executed) · no secrets · stores audio and titles in the app sandbox, nothing leaves the phone |
-| **Proof it works** | `console.log("meeting saved", {id, durationMs, bytes})` after insert; in the list, the new row with the right duration |
+| **Proof it works** | `console.log("meeting saved", id, durationMs, bytes)` after insert; in the list, the new row with the right duration |
 | **Rollout** | no flag. Expo Go on the phone; rollback is reloading the previous commit in Expo Go. |
 
 ### Test plan
