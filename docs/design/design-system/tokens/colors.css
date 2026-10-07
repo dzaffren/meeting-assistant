@@ -1,0 +1,12 @@
+:root {
+  --color-surface: #0B0C0F;
+  --color-surface-raised: #1A1C22;
+  --color-text: #F1F2F4;
+  --color-text-muted: #9BA1AC;
+  --color-accent: #6FA3FF;
+  --color-on-accent: #0B0C0F;
+  --color-recording: #E5484D;
+  --color-ok: #8DB898;
+  --color-border: #2A2D35;
+  --color-scrim: rgba(0, 0, 0, 0.6);
+}

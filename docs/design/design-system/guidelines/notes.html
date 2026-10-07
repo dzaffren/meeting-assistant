@@ -1,0 +1,26 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notes</title>
+<link rel="stylesheet" href="../styles.css">
+<style>
+main { padding: 24px; max-width: 390px; display: flex; flex-direction: column; gap: 16px; }
+.stack { display: flex; flex-direction: column; gap: 12px; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.sw { display: grid; grid-template-columns: 40px 1fr; grid-template-rows: auto auto; column-gap: 12px; align-items: center; }
+.sw span { grid-row: 1 / 3; width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--color-border); }
+.sw b { font-weight: 400; font-size: 15px; }
+.sw i { font: var(--text-label); color: var(--color-text-muted); font-style: normal; }
+p { margin: 0; }
+</style>
+</head>
+<body>
+<main>
+<h1 class="heading">Notes</h1>
+<p class="title">Raslaw weekly sync</p><p class="meta">Today · 48 min</p><p class="heading">Summary</p><p>Reviewed the Q4 roadmap. Billing migration slips two weeks.</p><p class="heading">Decisions</p><p class="decision">Ship billing migration on 24 Oct, not 10 Oct.</p><p class="heading">To do</p><p class="todo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="6"/></svg><span>Send the vendor the new API contract by Thursday</span></p><p class="todo done"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-ok)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="6"/><path d="m8 12 3 3 5-6"/></svg><span>Share the roadmap deck</span></p>
+</main>
+</body>
+</html>

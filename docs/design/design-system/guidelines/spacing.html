@@ -1,0 +1,28 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spacing and radius</title>
+<link rel="stylesheet" href="../styles.css">
+<style>
+main { padding: 24px; max-width: 390px; display: flex; flex-direction: column; gap: 16px; }
+.stack { display: flex; flex-direction: column; gap: 12px; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.sw { display: grid; grid-template-columns: 40px 1fr; grid-template-rows: auto auto; column-gap: 12px; align-items: center; }
+.sw span { grid-row: 1 / 3; width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--color-border); }
+.sw b { font-weight: 400; font-size: 15px; }
+.sw i { font: var(--text-label); color: var(--color-text-muted); font-style: normal; }
+p { margin: 0; }
+</style>
+</head>
+<body>
+<main>
+<h1 class="heading">Spacing and radius</h1>
+<p class="meta">4px scale: 4, 8, 12, 16, 24, 32, 48. Screen gutter 24. Card padding 16.</p>
+<p>Radius: pill (999) on buttons, inputs and controls. 12 on cards. 24 on the sheet's top corners.</p>
+<p>Touch targets 44px minimum. Round controls 64px, the idle record control 88px.</p>
+</main>
+</body>
+</html>
