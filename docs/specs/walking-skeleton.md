@@ -1,6 +1,6 @@
 # Walking skeleton: record a meeting and save it
 
-**Version:** v1 · **Status:** Built · **Type:** Skeleton · **Project type:** Mobile UI (Expo)
+**Version:** v1 · **Status:** Shipped · **Type:** Skeleton · **Project type:** Mobile UI (Expo)
 
 **Shape doc:** docs/specs/meeting-assistant/shape.md
 **Depends on:** None
